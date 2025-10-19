@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seismic Rock House Quiz</title>
+<style>
+body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 20px; }
+h1 { text-align: center; color: #333; }
+.question { margin-bottom: 20px; background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+label { display: block; margin: 8px 0; cursor: pointer; }
+button { padding: 12px 25px; margin-top: 20px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; background: #007bff; color: white; }
+button:hover { background: #0056b3; }
+#resultCard { display:none; text-align:center; margin-top:30px; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.2); position:relative; color:white; max-width:400px; margin:auto; }
+#resultCard img { width:100%; border-radius:15px; }
+#resultOverlay { position:absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.45); border-radius:15px; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; }
+#resultOverlay h2 { margin-bottom:10px; }
+#downloadBtn { margin-top:20px; background:white; color:#333; }
+#downloadBtn:hover { background:#eee; }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+<h1>Seismic Rock House Quiz</h1>
+<form id="quizForm"></form>
+<button id="doneBtn">Done</button>
+<div id="resultCard">
+  <img id="rockImage" src="" alt="Rock">
+  <div id="resultOverlay">
+    <h2 id="houseName"></h2>
+    <p id="houseDesc"></p>
+    <button id="downloadBtn">Download Your Result</button>
+  </div>
+</div>
+<script>
+// Quiz data
+const quizData = [
+  { q:"When you hear 'Seismic,' what excites you most?", options:["Protecting info","Creating ideas","Building systems","Exploring freely"], house:["Obsidian","Quartz","Granite","Pumice"] },
+  { q:"How do you solve problems?", options:["Carefully","Creatively","Methodically","Boldly"], house:["Obsidian","Quartz","Granite","Pumice"] },
+  { q:"Which project excites you?", options:["Secure","Innovative","Challenging","Independent"], house:["Obsidian","Quartz","Granite","Pumice"] },
+  { q:"How do you thrive in a team?", options:["Ensure security","Inspire creativity","Structure work","Work independently"], house:["Obsidian","Quartz","Granite","Pumice"] },
+  { q:"If Seismic were a rock, which would you be?", options:["Sharp & dark","Clear & bright","Solid & dependable","Light & free"], house:["Obsidian","Quartz","Granite","Pumice"] },
+  { q:"Learning style?", options:["Master rules","Experiment","Build carefully","Dive in"], house:["Obsidian","Quartz","Granite","Pumice"] },
+  { q:"Favorite tool?", options:["Security toolkit","Innovation lab","Build kit","Self-serve kit"], house:["Obsidian","Quartz","Granite","Pumice"] },
+  { q:"Ideal work environment?", options:["Controlled","Bright/creative","Structured","Flexible"], house:["Obsidian","Quartz","Granite","Pumice"] },
+  { q:"How tackle challenges?", options:["Protect resources","Innovate","Step by step","Figure it out"], house:["Obsidian","Quartz","Granite","Pumice"] },
+  { q:"Ultimate goal?", options:["Protect security","Innovate","Master craft","Operate freely"], house:["Obsidian","Quartz","Granite","Pumice"] }
+];
+
+const rockImages = {
+  "Obsidian":"https://i.imgur.com/6N0q7Jx.jpg",
+  "Quartz":"https://i.imgur.com/ZF9mP5b.jpg",
+  "Granite":"https://i.imgur.com/n6KQpo6.jpg",
+  "Pumice":"https://i.imgur.com/5KXHQ7U.jpg"
+};
+
+const descriptions = {
+  "Obsidian":"Protective, strategic, sharp-minded; you value security above all.",
+  "Quartz":"Bright, creative, multifaceted; you thrive on new ideas and change.",
+  "Granite":"Strong, reliable, steady; you excel at building systems and mastering your craft.",
+  "Pumice":"Light, adaptable, autonomous; you thrive on independence and exploration."
+};
+
+const form = document.getElementById('quizForm');
+const doneBtn = document.getElementById('doneBtn');
+const resultCard = document.getElementById('resultCard');
+const rockImage = document.getElementById('rockImage');
+const houseNameEl = document.getElementById('houseName');
+const houseDescEl = document.getElementById('houseDesc');
+const downloadBtn = document.getElementById('downloadBtn');
+
+// Render quiz
+quizData.forEach((q,index)=>{
+  const div = document.createElement('div');
+  div.className='question';
+  div.innerHTML=`<strong>Q${index+1}: ${q.q}</strong>`;
+  q.options.forEach((opt,i)=>{
+    const label = document.createElement('label');
+    label.innerHTML=`<input type="radio" name="q${index}" value="${q.house[i]}"> ${opt}`;
+    div.appendChild(label);
+  });
+  form.appendChild(div);
+});
+
+// Show result
+doneBtn.addEventListener('click', ()=>{
+  const formData = new FormData(form);
+  if([...formData.values()].length<quizData.length){ alert("Answer all questions!"); return; }
+  const tally={};
+  for(let val of formData.values()){ tally[val]=(tally[val]||0)+1; }
+  let max=0,userHouse='';
+  for(let h in tally){ if(tally[h]>max){max=tally[h]; userHouse=h; }
+  }
+  rockImage.src=rockImages[userHouse];
+  houseNameEl.textContent=`You belong to ${userHouse}`;
+  houseDescEl.textContent=descriptions[userHouse];
+  resultCard.style.display='block';
+  resultCard.scrollIntoView({behavior:'smooth'});
+  confetti({particleCount:150, spread:70, origin:{y:0.6}});
+});
+
+// Download result card
+downloadBtn.addEventListener('click',()=>{
+  html2canvas(resultCard).then(canvas=>{
+    const link=document.createElement('a');
+    link.download='Seismic_Rock_House.png';
+    link.href=canvas.toDataURL();
+    link.click();
+  });
+});
+</script>
+</body>
+</html>
