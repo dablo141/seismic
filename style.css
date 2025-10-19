@@ -1,0 +1,74 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f0f2f5;
+  padding: 20px;
+}
+h1 {
+  text-align: center;
+  color: #333;
+}
+.question {
+  margin-bottom: 20px;
+  background: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+label {
+  display: block;
+  margin: 8px 0;
+  cursor: pointer;
+}
+button {
+  padding: 12px 25px;
+  margin-top: 20px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  background: #007bff;
+  color: white;
+}
+button:hover {
+  background: #0056b3;
+}
+#resultCard {
+  display:none;
+  text-align:center;
+  margin-top:30px;
+  border-radius:15px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);
+  position:relative;
+  color:white;
+  max-width:400px;
+  margin:auto;
+}
+#resultCard img {
+  width:100%;
+  border-radius:15px;
+}
+#resultOverlay {
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.45);
+  border-radius:15px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+#resultOverlay h2 {
+  margin-bottom:10px;
+}
+#downloadBtn {
+  margin-top:20px;
+  background:white;
+  color:#333;
+}
+#downloadBtn:hover {
+  background:#eee;
+}
